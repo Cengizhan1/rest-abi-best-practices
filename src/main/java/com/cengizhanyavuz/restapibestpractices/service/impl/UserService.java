@@ -1,40 +1,47 @@
 package com.cengizhanyavuz.restapibestpractices.service.impl;
 
 import com.cengizhanyavuz.restapibestpractices.model.UserDto;
+import com.cengizhanyavuz.restapibestpractices.model.repository.IUserRepository;
 import com.cengizhanyavuz.restapibestpractices.service.IUserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class UserService implements IUserService<UserDto> {
+
+    private final IUserRepository userRepository;
+
     @Override
     public UserDto getById(int id) {
-        return null;
+        return userRepository.findById(id).orElse(null);
     }
 
     @Override
     public List<UserDto> getUsers(int maxRecords) {
-        return null;
+        return userRepository.findTopNUsers(maxRecords);
     }
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        return null;
+        return userRepository.save(userDto);
     }
 
     @Override
     public UserDto updateUser(UserDto userDto) {
-        return null;
+        return userRepository.save(userDto);
     }
 
     @Override
     public UserDto patchUser(UserDto userDto) {
-        return null;
+        return userRepository.save(userDto);
     }
 
     @Override
     public void deleteUser(int id) {
-
+        userRepository.deleteById(id);
     }
 }
