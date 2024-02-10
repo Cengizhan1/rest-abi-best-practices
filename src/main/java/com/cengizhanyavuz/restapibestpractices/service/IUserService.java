@@ -9,9 +9,9 @@ public interface IUserService<D> {
 
     public D createUser(D d);
 
-    public D updateUser(D d);
+    public D updateUser(int id,D d);
 
-    public D patchUser(D d);
+    public D patchUser(int id,D d);
 
     public void deleteUser(int id);
 }

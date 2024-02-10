@@ -31,12 +31,12 @@ public class UserService implements IUserService<UserDto> {
     }
 
     @Override
-    public UserDto updateUser(UserDto userDto) {
+    public UserDto updateUser(int id, UserDto userDto) {
         return userRepository.save(userDto);
     }
 
     @Override
-    public UserDto patchUser(UserDto userDto) {
+    public UserDto patchUser(int id,UserDto userDto) {
         return userRepository.save(userDto);
     }
 
