@@ -1,47 +1,71 @@
 package com.cengizhanyavuz.restapibestpractices.service.impl;
 
+import com.cengizhanyavuz.restapibestpractices.exception.UserNotFoundException;
 import com.cengizhanyavuz.restapibestpractices.model.UserDto;
-import com.cengizhanyavuz.restapibestpractices.model.repository.IUserRepository;
 import com.cengizhanyavuz.restapibestpractices.service.IUserService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @Service
 public class UserService implements IUserService<UserDto> {
 
-    private final IUserRepository userRepository;
+    private final Map<Integer, UserDto> userMap = new HashMap<>();
+    private int nextId = 1;
 
     @Override
     public UserDto getById(int id) {
-        return userRepository.findById(id).orElse(null);
+        UserDto user = userMap.get(id);
+        if (user == null) {
+            throw new UserNotFoundException("User: " + id + " not found");
+        }
+        return user;
     }
 
     @Override
     public List<UserDto> getUsers(int maxRecords) {
-        return userRepository.findTopNUsers(maxRecords);
+        return userMap.values().stream().limit(maxRecords).collect(Collectors.toList());
     }
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        return userRepository.save(userDto);
+        userDto.setId(nextId++);
+        userMap.put(userDto.getId(), userDto);
+        return userDto;
     }
 
     @Override
     public UserDto updateUser(int id, UserDto userDto) {
-        return userRepository.save(userDto);
+        if (!userMap.containsKey(id)) {
+            throw new UserNotFoundException("User: " + id + " not found");
+        }
+        userDto.setId(id);
+        userMap.put(id, userDto);
+        return userDto;
     }
 
     @Override
-    public UserDto patchUser(int id,UserDto userDto) {
-        return userRepository.save(userDto);
+    public UserDto patchUser(int id, UserDto userDto) {
+        UserDto user = getById(id);
+        if (userDto.getName() != null) {
+            user.setName(userDto.getName());
+        }
+        if (userDto.getEmail() != null) {
+            user.setEmail(userDto.getEmail());
+        }
+        if (userDto.getDetail() != null) {
+            user.setDetail(userDto.getDetail());
+        }
+        return user;
     }
 
     @Override
     public void deleteUser(int id) {
-        userRepository.deleteById(id);
+        if (userMap.remove(id) == null) {
+            throw new UserNotFoundException("User: " + id + " not found");
+        }
     }
 }

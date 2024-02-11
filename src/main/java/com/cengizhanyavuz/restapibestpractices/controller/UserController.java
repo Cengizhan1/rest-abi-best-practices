@@ -4,12 +4,10 @@ import com.cengizhanyavuz.restapibestpractices.model.BaseResponse;
 import com.cengizhanyavuz.restapibestpractices.model.UserDto;
 import com.cengizhanyavuz.restapibestpractices.service.impl.UserService;
 import io.swagger.annotations.*;
-import org.apache.catalina.User;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 import java.util.List;
 
 @Api(value = "users", description = "Rest api for User Management")
